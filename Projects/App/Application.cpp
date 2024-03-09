@@ -124,11 +124,14 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vs.size()*sizeof(float), vs.data(), GL_STATIC_DRAW);
     // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
     // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+    // GPU Sided
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(4*sizeof(float)));
+    // GPU Sided
+    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
     unsigned int ibo;
     glGenBuffers(1, &ibo);
@@ -146,7 +149,8 @@ int main()
     std::string sourceF=parseShaders("../../../../Shaders/fragment.shader");
     unsigned int shader=CreateShader(sourceV, sourceF);
     glUseProgram(shader);
-    unsigned int transLoc=glGetUniformLocation(shader, "trans");
+    // GPU Sided
+    // unsigned int transLoc=glGetUniformLocation(shader, "trans");
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // uncomment this call to draw in wireframe polygons.
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -160,9 +164,20 @@ int main()
         // input
         // -----
         theta++;
+        // Include this code below to allow user control
         // processInput(window, &ele, theta);
-        ele.rotate(glm::vec3{0.0f, 0.0f, 1.0f});
-        glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(ele.trans));
+        ele.rotate(glm::vec3{0.0f, 0.0f, 1.0f});        // Default rotation
+        std::vector<float> copy=vs;
+        for(int i=0;i<vs.size();i+=7){
+            glm::vec4 vert=glm::vec4{copy[i], copy[i+1], copy[i+2], copy[i+3]};
+            vert=ele.trans*vert;
+            copy[i]=vert.x;
+            copy[i+1]=vert.y;
+            copy[i+2]=vert.z;
+            copy[i+3]=vert.w;
+        }
+        // GPU sided code below
+        // glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(ele.trans));
         // render
         // ------
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -170,8 +185,8 @@ int main()
 
         // draw our first triangle
         // vs=ele.getVBO();
-        // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // glBufferData(GL_ARRAY_BUFFER, vs.size()*sizeof(float), vs.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, copy.size()*sizeof(float), copy.data(), GL_STATIC_DRAW);
         // glUseProgram(shaderProgram);
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawElements(GL_TRIANGLES, is.size(), GL_UNSIGNED_INT, nullptr);
