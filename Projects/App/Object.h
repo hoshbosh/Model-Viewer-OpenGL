@@ -9,6 +9,7 @@ class Object{
     std::vector<float> getVBO();
     std::vector<unsigned int> getIndices(){return indicies;};
     void rotate(float theta);
+    glm::mat4 trans;
     private:
     int size;
     std::vector<Vertex> vertices;

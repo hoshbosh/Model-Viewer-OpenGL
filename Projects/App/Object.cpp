@@ -9,6 +9,7 @@ Object::Object(std::string s){
     std::string line;
     std::ifstream stream(s);
     int cont=0;
+    trans=glm::mat4(1.0f);
     std::vector<glm::vec3> colors{
         glm::vec3{1.0f, 0.0f, 0.0f}, 
         glm::vec3{0.0f, 1.0f, 0.0f}, 
@@ -73,9 +74,8 @@ std::vector<float> Object::getVBO(){
     return temp;
 }
 void Object::rotate(float theta){
-    glm::mat4 trans;
     trans=glm::rotate(trans, glm::radians(45.0f), glm::vec3{-1.0f, 0.0f, 0.0f});
     for(auto  currentVert : vertices){
-        currentVert.setPosition(trans*currentVert.position);
+        // currentVert.setPosition(trans*currentVert.position);
     }
 }
