@@ -8,7 +8,9 @@ class Object{
     Object(std::string s);
     std::vector<float> getVBO();
     std::vector<unsigned int> getIndices(){return indicies;};
-    void rotate(float theta);
+    void rotate(float theta, glm::vec3 axis);
+    void translate(glm::vec3 d);
+    void scale(glm::vec3 s);
     glm::mat4 trans;
     private:
     int size;

@@ -11,12 +11,14 @@
 #include "ParseElements.h"
 #include "Object.h"
 #include "Inputs.h"
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1000;
+const unsigned int SCR_HEIGHT = 800;
 
 
 
@@ -136,6 +138,7 @@ int main()
     shaderSource source=parseShaders("../../../../Shaders/Shader.shader");
     unsigned int shader=CreateShader(source.vertex, source.fragment);
     glUseProgram(shader);
+    unsigned int transLoc=glGetUniformLocation(shader, "trans");
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // uncomment this call to draw in wireframe polygons.
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -148,16 +151,16 @@ int main()
         // -----
         theta++;
         processInput(window, &ele, theta);
-
+        glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(ele.trans));
         // render
         // ------
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        // glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         // draw our first triangle
-        vs=ele.getVBO();
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vs.size()*sizeof(float), vs.data(), GL_STATIC_DRAW);
+        // vs=ele.getVBO();
+        // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        // glBufferData(GL_ARRAY_BUFFER, vs.size()*sizeof(float), vs.data(), GL_STATIC_DRAW);
         // glUseProgram(shaderProgram);
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawElements(GL_TRIANGLES, is.size(), GL_UNSIGNED_INT, nullptr);

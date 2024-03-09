@@ -59,10 +59,7 @@ Object::Object(std::string s){
                     indicies.push_back(c);
             }
         }
-
     }
-
-        // verticies.push_back(cont%3.0f)
 }
 std::vector<float> Object::getVBO(){
     std::vector<float> temp;
@@ -73,9 +70,12 @@ std::vector<float> Object::getVBO(){
     }
     return temp;
 }
-void Object::rotate(float theta){
-    trans=glm::rotate(trans, glm::radians(45.0f), glm::vec3{-1.0f, 0.0f, 0.0f});
-    for(auto  currentVert : vertices){
-        // currentVert.setPosition(trans*currentVert.position);
-    }
+void Object::rotate(float theta, glm::vec3 axis){
+    trans=glm::rotate(trans, glm::radians(theta), axis);
+}
+void Object::translate(glm::vec3 d){
+    trans=glm::translate(trans, d);
+}
+void Object::scale(glm::vec3 s){
+    trans=glm::scale(trans, s);
 }
