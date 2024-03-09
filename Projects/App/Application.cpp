@@ -135,8 +135,9 @@ int main()
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0); 
 
-    shaderSource source=parseShaders("../../../../Shaders/Shader.shader");
-    unsigned int shader=CreateShader(source.vertex, source.fragment);
+    std::string sourceV=parseShaders("../../../../Shaders/vertex.shader");
+    std::string sourceF=parseShaders("../../../../Shaders/fragment.shader");
+    unsigned int shader=CreateShader(sourceV, sourceF);
     glUseProgram(shader);
     unsigned int transLoc=glGetUniformLocation(shader, "trans");
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
