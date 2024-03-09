@@ -1,10 +1,17 @@
 #include "Object.h"
-// #include "ParseElements.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+std::vector<unsigned int> Object::getIndices(){
+    std::vector<unsigned int> temp;
+    for(auto currTri:triangles){
+        for(auto c: currTri.indices)
+            temp.push_back(c); 
+    }
+    return temp;
+}
 Object::Object(std::string s){
     std::string line;
     std::ifstream stream(s);
@@ -55,8 +62,7 @@ Object::Object(std::string s){
                         lineIndicies.push_back(std::stof(word));
                     }
                 }
-                for(auto c: lineIndicies)
-                    indicies.push_back(c);
+                triangles.push_back({lineIndicies});
             }
         }
     }
