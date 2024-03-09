@@ -76,8 +76,8 @@ std::vector<float> Object::getVBO(){
     }
     return temp;
 }
-void Object::rotate(float theta, glm::vec3 axis){
-    trans=glm::rotate(trans, glm::radians(theta), axis);
+void Object::rotate(glm::vec3 axis){
+    trans=glm::rotate(trans, glm::radians(0.1f), axis);
 }
 void Object::translate(glm::vec3 d){
     trans=glm::translate(trans, d);

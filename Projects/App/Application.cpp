@@ -13,6 +13,7 @@
 #include "Inputs.h"
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include <chrono>
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -146,18 +147,21 @@ int main()
     unsigned int shader=CreateShader(sourceV, sourceF);
     glUseProgram(shader);
     unsigned int transLoc=glGetUniformLocation(shader, "trans");
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // uncomment this call to draw in wireframe polygons.
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float theta=0.0f;
+    std::vector<int> times;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
+        auto start=std::chrono::high_resolution_clock::now();
         // input
         // -----
         theta++;
-        processInput(window, &ele, theta);
+        // processInput(window, &ele, theta);
+        ele.rotate(glm::vec3{0.0f, 0.0f, 1.0f});
         glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(ele.trans));
         // render
         // ------
@@ -178,8 +182,15 @@ int main()
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
+        auto stop=std::chrono::high_resolution_clock::now();
+        std::chrono::microseconds duration=std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
+        times.push_back(duration.count());
     }
-
+    int total=0;
+    for(auto currTime:times){
+        total+=currTime;
+    }
+    std::cout<<(total/times.size())<<std::endl; 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
