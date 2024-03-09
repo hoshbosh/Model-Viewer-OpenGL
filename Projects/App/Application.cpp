@@ -95,17 +95,22 @@ int main()
     //      0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f// top   
     // };
     // // unsigned int numVertices = sizeof(vertices)/3;
-    // float vertices[] = {
-    //     -0.5f, -.5f, 0.0f, // left  
-    //      0.5f, -.5f, 0.0f, // right 
-    //      0.5f,0.5f, 0.0f,
-    //      -0.5f,  0.5f, 0.0f,// top   
+    float vertices[] = {
+        -0.5f, -.5f, 0.0f, // left  
+         1.0f,0.0f,0.0f,
+         0.5f, -.5f, 0.0f, // right 
+         0.0f,1.0f,0.0f,
+        //  0.5f,0.5f, 0.0f,
+         -0.5f,  0.5f, 0.0f,// top   
+         0.0f,0.0f,1.0f,
+         0.5f,  0.5f, 0.0f,// top   
+         0.0f,0.0f,1.0f,
         
-    // };
-    // unsigned int indicies[]={
-    //     0,1,2,
-    //     2,3,0
-    // };
+    };
+    unsigned int indicies[]={
+        0,1,2,
+        2,1,3
+    };
     std::string f="../../../../data/pawn.obj";
     Object ele=Object(f);
     std::vector<float> vs=ele.getVBO();
@@ -127,6 +132,7 @@ int main()
     unsigned int ibo;
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, is.size()*sizeof(unsigned int), is.data(), GL_STATIC_DRAW);
     // note that this is allowed, the call to g0VertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
@@ -140,7 +146,7 @@ int main()
     unsigned int shader=CreateShader(sourceV, sourceF);
     glUseProgram(shader);
     unsigned int transLoc=glGetUniformLocation(shader, "trans");
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // uncomment this call to draw in wireframe polygons.
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float theta=0.0f;
