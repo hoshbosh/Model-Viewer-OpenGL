@@ -6,11 +6,11 @@ class Vertex{
     Vertex(glm::vec3 _pos);
     std::vector<float> getVertex();
     void setColor(glm::vec3 _col);
-    void setPosition(glm::vec4 newPos){position=newPos;};
+    // void setPosition(glm::vec4 newPos){position=newPos;};
     // GPU sided code below
-    // void setPosition(glm::vec3 newPos){position=newPos;};
-    glm::vec4 position;
+    void setPosition(glm::vec3 newPos){position=newPos;};
+    // glm::vec4 position;
     // GPU sided code below
-    // glm::vec3 position;
+    glm::vec3 position;
     glm::vec3 color;
 };

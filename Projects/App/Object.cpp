@@ -5,6 +5,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 std::vector<unsigned int> Object::getIndices(){
+    // Temp is the array of vertices to be returned
     std::vector<unsigned int> temp;
     for(auto currTri:triangles){
         for(auto c: currTri.indices)
@@ -39,6 +40,7 @@ Object::Object(std::string s){
             if(cont%3==1){
                 tempVert.setColor(colors[1]);
             }
+
             if(cont%3==2){
                 tempVert.setColor(colors[2]);
             }

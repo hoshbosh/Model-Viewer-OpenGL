@@ -1,7 +1,6 @@
 @echo off
-premake5 ninja
+premake5 gmake2
 cd Generated
-ninja
+make
 cd ../Build/Bin/App/Debug
-App.exe > Debug.txt
-type Debug.txt
+App.exe

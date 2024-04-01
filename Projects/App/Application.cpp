@@ -21,14 +21,14 @@ void processInput(GLFWwindow *window);
 const unsigned int SCR_WIDTH = 1000;
 const unsigned int SCR_HEIGHT = 800;
 
-
-
-
+// Compiles shader  from source code and id
 unsigned int CompileShader(unsigned int type, const std::string& source){
     unsigned int id=glCreateShader(type);
     const char * src=source.c_str();
+    // Compile shader
     glShaderSource(id, 1, &src, nullptr);
     glCompileShader(id);
+    // Error catching in compiling shader
     int result;
     glGetShaderiv(id, GL_COMPILE_STATUS, &result);
     if(!result){
@@ -43,18 +43,21 @@ unsigned int CompileShader(unsigned int type, const std::string& source){
     }
     return id;
 }
+// Create shader function
 unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader){
+    // Compiles the vertex and the fragment shader, also creates the program to be used
     unsigned int program=glCreateProgram();
     unsigned int vs=CompileShader(GL_VERTEX_SHADER, vertexShader);
     unsigned int fs=CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
+    // Prepare all programs and shaders
     glAttachShader(program, vs);
     glAttachShader(program, fs);
     glLinkProgram(program);
     glValidateProgram(program);
-
+    // Shaders are not needed
     glDeleteShader(vs);
     glDeleteShader(fs);
+    // Returns the ID of the final program
     return program;
 }
 int main()
@@ -90,30 +93,28 @@ int main()
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-    // float vertices[] = {
-    //     -0.5f, -.5f, 0.0f, 1.0f, 0.0f,0.0f, // left  
-    //      0.5f, -.5f, 0.0f, 0.0f, 1.0f, 0.0f,// right 
-    //      0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f// top   
-    // };
-    // // unsigned int numVertices = sizeof(vertices)/3;
+    // Vertices for basic triangle
     float vertices[] = {
         -0.5f, -.5f, 0.0f, // left  
          1.0f,0.0f,0.0f,
          0.5f, -.5f, 0.0f, // right 
          0.0f,1.0f,0.0f,
-        //  0.5f,0.5f, 0.0f,
          -0.5f,  0.5f, 0.0f,// top   
          0.0f,0.0f,1.0f,
          0.5f,  0.5f, 0.0f,// top   
          0.0f,0.0f,1.0f,
         
     };
+    // Indices for shader
     unsigned int indicies[]={
         0,1,2,
         2,1,3
     };
+    // Path to pawn when running from the build location
     std::string f="../../../../data/pawn.obj";
+    // The object is instantiated
     Object ele=Object(f);
+    // The initial vertices array and index array is created
     std::vector<float> vs=ele.getVBO();
     std::vector<unsigned int> is=ele.getIndices();
     unsigned int VBO, VAO;
@@ -123,8 +124,8 @@ int main()
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vs.size()*sizeof(float), vs.data(), GL_STATIC_DRAW);
+    // The following line was for sample triangle
     // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
     // GPU Sided
     // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
@@ -136,6 +137,7 @@ int main()
     unsigned int ibo;
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    // The following line was for sample triangle
     // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, is.size()*sizeof(unsigned int), is.data(), GL_STATIC_DRAW);
     // note that this is allowed, the call to g0VertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
@@ -144,14 +146,13 @@ int main()
     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0); 
-
+    // Shaders are parsed and created
     std::string sourceV=parseShaders("../../../../Shaders/vertex.shader");
     std::string sourceF=parseShaders("../../../../Shaders/fragment.shader");
     unsigned int shader=CreateShader(sourceV, sourceF);
     glUseProgram(shader);
     // GPU Sided
     // unsigned int transLoc=glGetUniformLocation(shader, "trans");
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // uncomment this call to draw in wireframe polygons.
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float theta=0.0f;
@@ -165,8 +166,8 @@ int main()
         // -----
         theta++;
         // Include this code below to allow user control
-        // processInput(window, &ele, theta);
-        ele.rotate(glm::vec3{0.0f, 0.0f, 1.0f});        // Default rotation
+        processInput(window, &ele, theta);
+        // ele.rotate(glm::vec3{0.0f, 0.0f, 1.0f});        // Default rotation
         std::vector<float> copy=vs;
         for(int i=0;i<vs.size();i+=7){
             glm::vec4 vert=glm::vec4{copy[i], copy[i+1], copy[i+2], copy[i+3]};
@@ -183,8 +184,8 @@ int main()
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // draw our first triangle
         // vs=ele.getVBO();
+        // Redefine buffer data
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, copy.size()*sizeof(float), copy.data(), GL_STATIC_DRAW);
         // glUseProgram(shaderProgram);

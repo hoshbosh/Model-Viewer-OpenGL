@@ -1,4 +1,4 @@
-workspace "Model Transformations"
+workspace "Lighting"
     location "Generated"
     language "C++"
     architecture "x86_64"
