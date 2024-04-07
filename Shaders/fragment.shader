@@ -1,7 +1,7 @@
 #shader fragment
 #version 330 core
 in vec3 Color;
-in float flogz;
+in vec3 Normal;
 out vec4 FragColor;
 float near=0.1;
 float far=100.0;

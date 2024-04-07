@@ -127,17 +127,17 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, vs.size()*sizeof(float), vs.data(), GL_STATIC_DRAW);
     // The following line was for sample triangle
     // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)0);
     // GPU Sided
     // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(4*sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(4*sizeof(float)));
     // GPU Sided
     // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(7*sizeof(float)));
     // glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(7*sizeof(float)));
-    // glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(7*sizeof(float)));
-    // glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(2);
     unsigned int ibo;
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -175,7 +175,7 @@ int main()
         processInput(window, &ele, theta);
         // ele.rotate(glm::vec3{0.0f, 0.0f, 1.0f});        // Default rotation
         std::vector<float> copy=vs;
-        for(int i=0;i<vs.size();i+=7){
+        for(int i=0;i<vs.size();i+=10){
             glm::vec4 vert=glm::vec4{copy[i], copy[i+1], copy[i+2], copy[i+3]};
             vert=ele.trans*vert;
             // vert=ele.viewTrans*vert;
