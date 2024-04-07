@@ -111,7 +111,7 @@ int main()
         2,1,3
     };
     // Path to pawn when running from the build location
-    std::string f="../../../../data/pawn.obj";
+    std::string f="../../../../data/cube.obj";
     // The object is instantiated
     Object ele=Object(f);
     // The initial vertices array and index array is created

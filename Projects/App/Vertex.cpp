@@ -12,7 +12,8 @@ std::vector<float> Vertex::getVertex(){
     std::vector<float> combined;
     combined.push_back(position.x);
     combined.push_back(position.y);
-    combined.push_back(position.z-1500.0f);
+    combined.push_back(position.z);
+    // combined.push_back(position.z-1500.0f);
     combined.push_back(position.w);
     combined.push_back(color.x);
     combined.push_back(color.y);

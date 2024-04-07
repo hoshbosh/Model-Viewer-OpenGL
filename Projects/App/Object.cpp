@@ -67,7 +67,22 @@ Object::Object(std::string s){
                         lineIndicies.push_back(std::stof(word));
                     }
                 }
+                if(lineIndicies.size()==4){
+                std::vector<unsigned int> temp;
+                temp.push_back(lineIndicies[0]);
+                temp.push_back(lineIndicies[1]);
+                temp.push_back(lineIndicies[3]);
+                triangles.push_back({temp});
+                temp.clear();
+                temp.push_back(lineIndicies[3]);
+                temp.push_back(lineIndicies[1]);
+                temp.push_back(lineIndicies[2]);
+                triangles.push_back({temp});
+                }else if(lineIndicies.size()==5){
+                    std::cout<<"FUCCKKK"<<std::endl;
+                }else{
                 triangles.push_back({lineIndicies});
+                }
             }
         }else if(line.find("vn ")!=std::string::npos){
             std::stringstream ss(line);
@@ -84,6 +99,7 @@ Object::Object(std::string s){
     for(int i=0;i<normals.size();i++){
         vertices[i].setNormal(normals[i]);
     }
+
 }
 std::vector<float> Object::getVBO(){
     std::vector<float> temp;
