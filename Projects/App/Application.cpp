@@ -116,6 +116,7 @@ int main()
     Object ele=Object(f);
     // The initial vertices array and index array is created
     std::vector<float> vs=ele.getVBO();
+
     std::vector<unsigned int> is=ele.getIndices();
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -134,6 +135,9 @@ int main()
     // GPU Sided
     // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(7*sizeof(float)));
+    // glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(float), (void*)(7*sizeof(float)));
+    // glEnableVertexAttribArray(2);
     unsigned int ibo;
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -152,11 +156,13 @@ int main()
     unsigned int shader=CreateShader(sourceV, sourceF);
     glUseProgram(shader);
     // GPU Sided
-    // unsigned int transLoc=glGetUniformLocation(shader, "trans");
+    ele.viewTrans=glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 10000.0f);
+    unsigned int transLoc=glGetUniformLocation(shader, "trans");
     // uncomment this call to draw in wireframe polygons.
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float theta=0.0f;
     std::vector<int> times;
+    glEnable(GL_DEPTH_TEST);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -172,17 +178,18 @@ int main()
         for(int i=0;i<vs.size();i+=7){
             glm::vec4 vert=glm::vec4{copy[i], copy[i+1], copy[i+2], copy[i+3]};
             vert=ele.trans*vert;
+            // vert=ele.viewTrans*vert;
             copy[i]=vert.x;
             copy[i+1]=vert.y;
             copy[i+2]=vert.z;
             copy[i+3]=vert.w;
         }
         // GPU sided code below
-        // glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(ele.trans));
+        glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(ele.viewTrans));
         // render
         // ------
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
         // vs=ele.getVBO();
         // Redefine buffer data
@@ -206,7 +213,7 @@ int main()
     for(auto currTime:times){
         total+=currTime;
     }
-    std::cout<<(total/times.size())<<std::endl; 
+    // std::cout<<(total/times.size())<<std::endl; 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);

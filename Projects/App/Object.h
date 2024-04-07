@@ -15,6 +15,7 @@ class Object{
     void translate(glm::vec3 d);
     void scale(glm::vec3 s);
     glm::mat4 trans;
+    glm::mat4 viewTrans;
     private:
     int size;
     std::vector<Vertex> vertices;

@@ -18,6 +18,9 @@ Object::Object(std::string s){
     std::ifstream stream(s);
     int cont=0;
     trans=glm::mat4(1.0f);
+    viewTrans=glm::mat4(1.0f);
+    int normalIndexCont=0;
+    std::vector<glm::vec3> normals;
     std::vector<glm::vec3> colors{
         glm::vec3{1.0f, 0.0f, 0.0f}, 
         glm::vec3{0.0f, 1.0f, 0.0f}, 
@@ -66,7 +69,20 @@ Object::Object(std::string s){
                 }
                 triangles.push_back({lineIndicies});
             }
+        }else if(line.find("vn ")!=std::string::npos){
+            std::stringstream ss(line);
+            std::string word;
+            std::vector<float> temp;
+            while(ss>>word){
+                if(word!="vn"){
+                    temp.push_back(std::stof(word));
+                }
+            }
+            normals.push_back(glm::vec3{temp[0],temp[1], temp[2]});
         }
+    }
+    for(int i=0;i<normals.size();i++){
+        vertices[i].setNormal(normals[i]);
     }
 }
 std::vector<float> Object::getVBO(){
