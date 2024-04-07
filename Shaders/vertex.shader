@@ -15,6 +15,8 @@ void main(){
    lightColor=vec3(1.0,1.0,1.0);
    lightPosition=vec3(0.0,0.0,1.0);
    viewPosition=vec3(0.0,0.0,0.0);
+   vec3 tempColor=vec3(1.0, 0.0,0.0);
+//    vec3 tempColor=color;
     // Color=color;
     // Color=vec3(1.0, 0.0,0.0);
 
@@ -23,7 +25,7 @@ void main(){
    gl_Position =trans* vec4(aPos.x, aPos.y, aPos.z,aPos.w);
    FragPos=vec3(aPos.x, aPos.y, aPos.z);
    vec3 lightDir=normalize(lightPosition-FragPos);
-   vec3 norm=normalize(Normal);
+   vec3 norm=normalize(normal);
    vec3 viewDir=normalize(viewPosition-FragPos);
    vec3 reflectDir=reflect(-lightDir, norm);
 
@@ -40,9 +42,8 @@ void main(){
 
    float ambientStrength=0.3;
    vec3 ambient=ambientStrength*lightColor;
-
-   vec3 result=(ambient +specular+diffuse)*Color;
-   Color = vec4(result, 1.0);
+    vec3 result=(ambient+diffuse)*tempColor+specular;
+   Color = vec3(result);
 //    gl
     // GPU side transformation below
     //    gl_Position = trans*vec4(aPos.x, aPos.y, aPos.z,aPos.w);
