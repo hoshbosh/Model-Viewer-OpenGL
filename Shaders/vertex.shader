@@ -8,7 +8,7 @@ out vec3 Normal;
 // GPU side transformation below
 uniform mat4 trans;
 void main(){
-    Color=color;
+    Color=vec3(1.0, 0.0,0.0);
     Normal=normal;
 //    gl_Position =vec4(aPos.x, aPos.y, aPos.z,aPos.w);
    gl_Position =trans* vec4(aPos.x, aPos.y, aPos.z,aPos.w);

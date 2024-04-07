@@ -186,6 +186,7 @@ int main()
         }
         // GPU sided code below
         glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(ele.viewTrans));
+
         // render
         // ------
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

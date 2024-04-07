@@ -11,9 +11,18 @@ float linearizeDepth(float depth){
    return (2.0* near * far)/(far+near-z*(far-near));
 }
 void main(){
-   float depth=linearizeDepth(gl_FragCoord.z)/far;
+   vec3 lightColor=vec3(1.0,1.0,1.0);
+   // float depth=linearizeDepth(gl_FragCoord.z)/far;
+   // vec3 lightPosition=vec3(1.0,0.0,0.0);
+   // vec3 norm=normalize(Normal);
+   // vec3 lightDir=normalize(lightPosition-FragPos);
+   // float diff=max(dot(norm, lightDir),0.0);
    // depth is for the z buffer demonstration
    // FragColor = vec4(vec3(depth),1.0f);
    // Color is for the actual color
-   FragColor = vec4(Color, 1.0f);
+   float ambientStrength=0.1;
+   // vec3 diffuse=diff*lightColor;
+   vec3 ambient=ambientStrength*lightColor;
+   vec3 result=(ambient)*Color;
+   FragColor = vec4(result, 1.0f);
 };
