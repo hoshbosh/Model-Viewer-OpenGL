@@ -14,6 +14,7 @@ std::vector<unsigned int> Object::getIndices(){
     return temp;
 }
 Object::Object(std::string s){
+    shadingType=false;
     std::string line;
     std::ifstream stream(s);
     int cont=0;

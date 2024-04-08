@@ -156,13 +156,15 @@ int main()
     unsigned int shader=CreateShader(sourceV, sourceF);
     glUseProgram(shader);
     // GPU Sided
-    ele.viewTrans=glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 10000.0f);
+    ele.viewTrans=glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.001f, 1000000.0f);
     unsigned int transLoc=glGetUniformLocation(shader, "trans");
+    unsigned int shadingLoc=glGetUniformLocation(shader, "shading");
     // uncomment this call to draw in wireframe polygons.
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float theta=0.0f;
     std::vector<int> times;
     glEnable(GL_DEPTH_TEST);
+    
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -186,7 +188,7 @@ int main()
         }
         // GPU sided code below
         glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(ele.viewTrans));
-
+        glUniform1i(shadingLoc, ele.shadingType);
         // render
         // ------
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

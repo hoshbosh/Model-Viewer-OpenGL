@@ -16,6 +16,8 @@ class Object{
     void scale(glm::vec3 s);
     glm::mat4 trans;
     glm::mat4 viewTrans;
+    bool shadingType;
+    void toggleShading(){shadingType=!shadingType;};
     private:
     int size;
     std::vector<Vertex> vertices;
